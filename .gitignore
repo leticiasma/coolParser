@@ -1,2 +1,4 @@
-tp3_cool_parser/cgen
-tp3_cool_parser/cool-tree.aps
+!tp3_cool_parser/README
+!tp3_cool_parser/cool.y
+!tp3_cool_parser/good.cl
+!tp3_cool_parser/bad.cl
