@@ -82,7 +82,15 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <features> dummy_feature_list
 
 /* Precedence declarations go here. */
-
+%right ASSIGN
+%left NOT
+%nonassoc LE '<' '='
+%left '+' '-'
+%left '*' '/'
+%left ISVOID
+%left '~'
+%left '@'
+%left '.'
 
 %%
 /* 
