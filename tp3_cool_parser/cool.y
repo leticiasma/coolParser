@@ -158,11 +158,15 @@ formal_list
 
 expr
     : OBJECTID ASSIGN expr
-        { $$ = assign($1, $3); };
+        { $$ = assign($1, $3); }
     | expr '.' OBJECTID '(' expr_list ')'
         { $$ = dispatch($1, $3, $5); }
     | expr '@' TYPEID '.' OBJECTID '(' expr_list ')'
         { $$ = static_dispatch($1, $3, $5, $7); }
+    | OBJECTID '(' expr_list ')'
+        { $$ = dispatch(object(idtable.add_string("self")), $1, $3); }
+    | IF expr THEN expr ELSE expr FI
+        {$$ = cond($2, $4, $6);}
     ;
 
 expr_list
@@ -172,6 +176,7 @@ expr_list
         { $$ = single_Expressions($1); }
     | expr ',' expr_list
         { $$ = append_Expressions(single_Expressions($1), $3); }
+    | 
     ;
 /* end of grammar */
 %%
