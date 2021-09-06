@@ -159,8 +159,12 @@ formal_list
 expr
     : OBJECTID ASSIGN expr
         { $$ = assign($1, $3); }
+    | expr '.' OBJECTID '(' ')'
+        { $$ = dispatch($1, $3, nil_Expressions()); }
     | expr '.' OBJECTID '(' expr_list ')'
         { $$ = dispatch($1, $3, $5); }
+    | expr '@' TYPEID '.' OBJECTID '(' ')'
+        { $$ = static_dispatch($1, $3, $5, nil_Expressions()); }
     | expr '@' TYPEID '.' OBJECTID '(' expr_list ')'
         { $$ = static_dispatch($1, $3, $5, $7); }
     | OBJECTID '(' expr_list ')'
@@ -169,17 +173,15 @@ expr
         {$$ = cond($2, $4, $6);}
     | WHILE expr LOOP expr POOL
         {$$ = loop($2, $4);}
-    | 
+    | '{' expr_list ';' '}'
+        { $$ = block($2); }
     ;
 
 expr_list
-    : /* vazio */
-        { $$ = nil_Expressions();}
-    | expr
+    : expr
         { $$ = single_Expressions($1); }
     | expr ',' expr_list
         { $$ = append_Expressions(single_Expressions($1), $3); }
-    | 
     ;
 /* end of grammar */
 %%
