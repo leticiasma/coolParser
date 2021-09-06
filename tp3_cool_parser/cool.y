@@ -83,7 +83,8 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <features> feature_list
 %type <formal> formal
 %type <formals> formal_list
-%type <expression> expr 
+%type <expression> expr
+%type <expressions> expr_list
 
 
 /* Precedence declarations go here. */
@@ -152,11 +153,26 @@ formal_list
     | formal
         { $$ = single_Formals($1); }
     | formal ',' formal_list
-        { $$ = append_Formals(single_Formals($1), $3); };
+        { $$ = append_Formals(single_Formals($1), $3); }
     ;
 
+expr
+    : OBJECTID ASSIGN expr
+        { $$ = assign($1, $3); };
+    | expr '.' OBJECTID '(' expr_list ')'
+        { $$ = dispatch($1, $3, $5); }
+    | expr '@' TYPEID '.' OBJECTID '(' expr_list ')'
+        { $$ = static_dispatch($1, $3, $5, $7); }
+    ;
 
-
+expr_list
+    : /* vazio */
+        { $$ = nil_Expressions();}
+    | expr
+        { $$ = single_Expressions($1); }
+    | expr ',' expr_list
+        { $$ = append_Expressions(single_Expressions($1), $3); }
+    ;
 /* end of grammar */
 %%
 
