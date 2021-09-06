@@ -75,8 +75,8 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 
 /* Declare types for the grammar's non-terminals. */
 %type <program> program
-%type <classes> class_list
 %type <class_> class
+%type <classes> class_list
 
 /* You will want to change the following line. */
 %type <feature> feature
@@ -86,6 +86,8 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <expression> expr
 %type <expressions> expr_list
 %type <expressions> assign_list
+%type <case_> case
+%type <cases> case_list
 
 
 /* Precedence declarations go here. */
@@ -157,6 +159,17 @@ formal_list
         { $$ = append_Formals(single_Formals($1), $3); }
     ;
 
+case
+    : OBJECTID ':' TYPEID DARROW expr ';'
+        { $$ = branch($1, $3, $5); }
+    ;
+
+case_list
+    : case
+        { $$ = single_Cases($1); }
+    | case_list case 
+        { $$ = append_Cases($1, single_Cases($2)); };
+
 expr
     : OBJECTID ASSIGN expr
         { $$ = assign($1, $3); }
@@ -180,6 +193,8 @@ expr
         { $$ = let($2, $4, no_expr(), $6);}
     | LET OBJECTID ':' TYPEID assign_list IN expr
         { $$ = let($2, $4, $6, $8);} */
+    | CASE expr OF case_list ESAC
+        { $$ = typcase($2, $4); };
     | NEW TYPEID
         { $$ = new_($2);}
     | ISVOID expr
