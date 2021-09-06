@@ -106,15 +106,6 @@ program
         { @$ = @1; ast_root = program($1); }
     ;
 
-class_list
-	: class			/* single class */
-		{ $$ = single_Classes($1);
-        parse_results = $$; }
-	| class_list class	/* several classes */
-		{ $$ = append_Classes($1,single_Classes($2)); 
-        parse_results = $$; }
-	;
-
 /* If no parent is specified, the class inherits from the Object class. */
 class	
     : CLASS TYPEID '{' feature_list '}' ';'
@@ -123,6 +114,15 @@ class
     | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
         { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
     ;
+
+class_list
+	: class			/* single class */
+		{ $$ = single_Classes($1);
+        parse_results = $$; }
+	| class_list class	/* several classes */
+		{ $$ = append_Classes($1,single_Classes($2)); 
+        parse_results = $$; }
+	;
 
 feature
     : OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'
@@ -154,6 +154,8 @@ formal_list
     | formal ',' formal_list
         { $$ = append_Formals(single_Formals($1), $3); };
     ;
+
+
 
 /* end of grammar */
 %%
