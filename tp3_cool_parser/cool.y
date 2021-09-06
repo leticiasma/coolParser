@@ -137,6 +137,8 @@ feature
 feature_list
     :		/* empty */
         { $$ = nil_Features(); }
+    | feature_list feature
+        { $$ = append_Features($1, single_Features($2)); };
     ;
 
 formal
