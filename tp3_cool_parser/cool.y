@@ -118,6 +118,8 @@ class
         stringtable.add_string(curr_filename)); }
     | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
         { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
+    | CLASS error ';' class 
+        { $$ = $4; }
     ;
 
 class_list
