@@ -85,6 +85,7 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <formals> formal_list
 %type <expression> expr
 %type <expressions> expr_list
+%type <expressions> assign_list
 
 
 /* Precedence declarations go here. */
@@ -175,6 +176,11 @@ expr
         {$$ = loop($2, $4);}
     | '{' expr_list ';' '}'
         { $$ = block($2); }
+    /* | LET OBJECTID ':' TYPEID IN expr
+        { $$ = let($2, $4, no_expr(), $6);}
+    | LET OBJECTID ':' TYPEID assign_list IN expr
+        { $$ = let($2, $4, $6, $8);} */
+    |
     ;
 
 expr_list
@@ -183,6 +189,17 @@ expr_list
     | expr ',' expr_list
         { $$ = append_Expressions(single_Expressions($1), $3); }
     ;
+
+/* assign_list
+    : OBJECTID ':' TYPEID IN expr
+        { $$ = let($1, $3, no_expr(), $5); }
+      | OBJECTID ':' TYPEID ASSIGN expr IN expr
+        { $$ = let($1, $3, $5, $7); }
+      | OBJECTID ':' TYPEID ',' let
+        { $$ = let($1, $3, no_expr(), $5); }
+      | OBJECTID ':' TYPEID ASSIGN expr ',' let
+        { $$ = let($1, $3, $5, $7); }; */
+
 /* end of grammar */
 %%
 
