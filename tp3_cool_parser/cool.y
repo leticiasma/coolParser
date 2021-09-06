@@ -84,7 +84,8 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <formal> formal
 %type <formals> formal_list
 %type <expression> expr
-%type <expressions> expr_list
+%type <expressions> expr_list_comma
+%type <expressions> expr_list_semic
 %type <expressions> assign_list
 %type <case_> case
 %type <cases> case_list
@@ -185,19 +186,19 @@ expr
         { $$ = assign($1, $3); }
     | expr '.' OBJECTID '(' ')'
         { $$ = dispatch($1, $3, nil_Expressions()); }
-    | expr '.' OBJECTID '(' expr_list ')'
+    | expr '.' OBJECTID '(' expr_list_comma ')'
         { $$ = dispatch($1, $3, $5); }
     | expr '@' TYPEID '.' OBJECTID '(' ')'
         { $$ = static_dispatch($1, $3, $5, nil_Expressions()); }
-    | expr '@' TYPEID '.' OBJECTID '(' expr_list ')'
+    | expr '@' TYPEID '.' OBJECTID '(' expr_list_comma ')'
         { $$ = static_dispatch($1, $3, $5, $7); }
-    | OBJECTID '(' expr_list ')'
+    | OBJECTID '(' expr_list_comma ')'
         { $$ = dispatch(object(idtable.add_string("self")), $1, $3); }
     | IF expr THEN expr ELSE expr FI
         {$$ = cond($2, $4, $6);}
     | WHILE expr LOOP expr POOL
         {$$ = loop($2, $4);}
-    | '{' expr_list ';' '}'
+    | '{' expr_list_semic ';' '}'
         { $$ = block($2); }
     | LET assign_list
         { $$ = $2; }
@@ -237,11 +238,18 @@ expr
         { $$ = bool_const($1); }
     ;
 
-expr_list
+expr_list_comma
     : expr
         { $$ = single_Expressions($1); }
-    | expr ',' expr_list
+    | expr ',' expr_list_comma
         { $$ = append_Expressions(single_Expressions($1), $3); }
+    ;
+
+expr_list_semic
+    : expr ';'
+        { $$ = single_Expressions($1); }
+    | expr_list_semic  expr ';'
+        { $$ = append_Expressions($1, single_Expressions($2)); }
     ;
 
 /* end of grammar */
