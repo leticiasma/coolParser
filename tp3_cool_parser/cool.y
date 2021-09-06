@@ -170,6 +170,16 @@ case_list
     | case_list case 
         { $$ = append_Cases($1, single_Cases($2)); };
 
+assign_list
+    : OBJECTID ':' TYPEID IN expr
+        { $$ = let($1, $3, no_expr(), $5); }
+    | OBJECTID ':' TYPEID ASSIGN expr IN expr
+        { $$ = let($1, $3, $5, $7); }
+    | OBJECTID ':' TYPEID ',' assign_list
+        { $$ = let($1, $3, no_expr(), $5); }
+    | OBJECTID ':' TYPEID ASSIGN expr ',' assign_list
+        { $$ = let($1, $3, $5, $7); };
+
 expr
     : OBJECTID ASSIGN expr
         { $$ = assign($1, $3); }
@@ -189,10 +199,8 @@ expr
         {$$ = loop($2, $4);}
     | '{' expr_list ';' '}'
         { $$ = block($2); }
-    /* | LET OBJECTID ':' TYPEID IN expr
-        { $$ = let($2, $4, no_expr(), $6);}
-    | LET OBJECTID ':' TYPEID assign_list IN expr
-        { $$ = let($2, $4, $6, $8);} */
+    | LET assign_list
+        { $$ = $2; }
     | CASE expr OF case_list ESAC
         { $$ = typcase($2, $4); };
     | NEW TYPEID
@@ -235,16 +243,6 @@ expr_list
     | expr ',' expr_list
         { $$ = append_Expressions(single_Expressions($1), $3); }
     ;
-
-/* assign_list
-    : OBJECTID ':' TYPEID IN expr
-        { $$ = let($1, $3, no_expr(), $5); }
-      | OBJECTID ':' TYPEID ASSIGN expr IN expr
-        { $$ = let($1, $3, $5, $7); }
-      | OBJECTID ':' TYPEID ',' let
-        { $$ = let($1, $3, no_expr(), $5); }
-      | OBJECTID ':' TYPEID ASSIGN expr ',' let
-        { $$ = let($1, $3, $5, $7); }; */
 
 /* end of grammar */
 %%
