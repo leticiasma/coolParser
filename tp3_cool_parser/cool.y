@@ -246,7 +246,9 @@ expr
     ;
 
 expr_list_comma
-    : expr
+    : /*Vazio*/
+        { $$ = nil_Expressions(); }
+    | expr
         { $$ = single_Expressions($1); }
     | expr ',' expr_list_comma
         { $$ = append_Expressions(single_Expressions($1), $3); }
