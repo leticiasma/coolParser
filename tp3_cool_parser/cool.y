@@ -145,7 +145,9 @@ feature_list
     :		/* empty */
         { $$ = nil_Features(); }
     | feature_list feature
-        { $$ = append_Features($1, single_Features($2)); };
+        { $$ = append_Features($1, single_Features($2)); }
+    | feature_list error ';'
+        { $$ = $1; }
     ;
 
 formal
@@ -181,7 +183,10 @@ assign_list
     | OBJECTID ':' TYPEID ',' assign_list
         { $$ = let($1, $3, no_expr(), $5); }
     | OBJECTID ':' TYPEID ASSIGN expr ',' assign_list
-        { $$ = let($1, $3, $5, $7); };
+        { $$ = let($1, $3, $5, $7); }
+    | error ',' assign_list
+        { $$ = $3; }
+    ;
 
 expr
     : OBJECTID ASSIGN expr
@@ -252,6 +257,8 @@ expr_list_semic
         { $$ = single_Expressions($1); }
     | expr_list_semic  expr ';'
         { $$ = append_Expressions($1, single_Expressions($2)); }
+    | expr_list_semic error ';' 
+        { $$ = $1; }   
     ;
 
 /* end of grammar */
