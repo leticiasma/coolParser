@@ -205,7 +205,7 @@ expr
         {$$ = cond($2, $4, $6);}
     | WHILE expr LOOP expr POOL
         {$$ = loop($2, $4);}
-    | '{' expr_list_semic ';' '}'
+    | '{' expr_list_semic '}'
         { $$ = block($2); }
     | LET assign_list
         { $$ = $2; }
