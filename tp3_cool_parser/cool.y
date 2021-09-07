@@ -133,7 +133,7 @@ class_list
 
 feature
     : OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'
-        { $$ = method($1, $3, $5, $7); }
+        { $$ = method($1, $3, $6, $8); }
     | OBJECTID ':' TYPEID ';'
         { $$ = attr($1, $3, no_expr()); }
     | OBJECTID ':' TYPEID ASSIGN expr ';'
