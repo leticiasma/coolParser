@@ -86,7 +86,7 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <expression> expr
 %type <expressions> expr_list_comma
 %type <expressions> expr_list_semic
-%type <expressions> assign_list
+%type <expression> assign_list
 %type <case_> case
 %type <cases> case_list
 
