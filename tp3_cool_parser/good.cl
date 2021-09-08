@@ -7,6 +7,10 @@ class B {
     f (x:Int) : Int {
         x+1
     };
+
+    teste() : Int {
+        let c : Int <- 20 in c
+    };
 };
 
 class A inherits B {
@@ -18,7 +22,7 @@ class A inherits B {
     };
 
     teste() : Int {
-        let c : Int <- 33 in c
+        self@B.teste()
     };
 };
 
@@ -79,20 +83,20 @@ overflow.
 
 
      a2i_aux(s : String) : Int {
-	(let int : Int <- 0 in	
+	    (let int : Int <- 0 in	
            {	
                (let j : Int <- s.length() in
-	          (let i : Int <- 0 in
-		    while i < j loop
-			{
-			    int <- int * 10 + c2i(s.substr(i,1));
-			    i <- i + 1;
-			}
-		    pool
-		  )
-	       );
+	                (let i : Int <- 0 in
+		                while i < j loop
+			                {
+			                int <- int * 10 + c2i(s.substr(i,1));
+			                i <- i + 1;
+			                }
+		                    pool
+		            )
+	            );
               int;
-	    }
+	        }
         )
      };
 
@@ -109,7 +113,7 @@ overflow.
 (* i2a_aux is an example using recursion.  *)		
 
     i2a_aux(i : Int) : String {
-        if i = 0 then "" else 
+        if NOT NOT i = 0 then "" else 
 	    (let next : Int <- i / 10 in
 		i2a_aux(next).concat(i2c(i - next * 10))
 	    )
@@ -118,19 +122,40 @@ overflow.
 
 };
 
+class Teste {} ;
+
 class Main inherits IO{
 
    main() : Object {
     {   let 
-            d : Int <- 4, 
+            d : Int, 
             a : A <- new A, 
-            b : Int <- 9,
+            b : Int <- 3,
             z : A2I <- new A2I
         in 
-            {(d <- (a.teste() + b)); 
-            out_string(z.i2a(d));
-            out_string("\n");}
+            {
+                (d <- soma(teste_of(a), b)); 
+                out_string(z.i2a(d));
+                out_string("\n");
+            }
     ;
     }
+   };
+
+   teste_of(var : B) :  Int {
+       case var of
+            a : A => var.teste();
+            b : B => var.teste();
+        esac 
+   };
+
+   soma(a : Int, b : Int) : Int{
+       {
+            b <- a + b;
+            b <- b / 1;
+            b <- b * 1;
+            b <- b - 0;
+            b <- ~~b;
+       }
    };
 };
