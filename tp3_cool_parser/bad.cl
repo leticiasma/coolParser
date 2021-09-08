@@ -22,7 +22,7 @@ Class C inherits a {
 (*Erro em feature mas ele se recupera e o parser não para*)
 Class V{
     a : Int <- ;
-    b <- Int <- 9;
+    b : Int <- 9;
 };
 
 
@@ -40,12 +40,21 @@ Class Main{
     };
 }; 
 
-(* error:  closing brace is missing *)
-Class E inherits A {
-;
-
-(*Sem erros para que recuperemos do erro da classe anterior e o parser não pare*)
+(* Sem erros para que recuperemos do erro da classe anterior e o parser não pare *)
 Class F {};
+
+(* error:  opening brace is missing *)
+Class E inherits A 
+    teste_of(var : B) :  Int {
+       case var of
+            a : A => var.teste();
+            b : B => var.teste();
+        esac 
+   };
+};
+
+(* Sem erros para que recuperemos do erro da classe anterior e o parser não pare *)
+Class J {};
 
 (* error:  keyword inherits is misspelled *)
 Class D inherts A {
