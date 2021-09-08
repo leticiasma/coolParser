@@ -112,16 +112,6 @@ program
     ;
 
 /* If no parent is specified, the class inherits from the Object class. */
-class	
-    : CLASS TYPEID '{' feature_list '}' ';'
-        { $$ = class_($2,idtable.add_string("Object"),$4,
-        stringtable.add_string(curr_filename)); }
-    | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
-        { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
-    | CLASS error ';' class 
-        { $$ = $4; }
-    ;
-
 class_list
 	: class			/* single class */
 		{ $$ = single_Classes($1);
@@ -129,7 +119,17 @@ class_list
 	| class_list class	/* several classes */
 		{ $$ = append_Classes($1,single_Classes($2)); 
         parse_results = $$; }
-	;
+    ;
+
+class	
+    : CLASS TYPEID '{' feature_list '}' ';'
+        { $$ = class_($2,idtable.add_string("Object"),$4,
+        stringtable.add_string(curr_filename)); }
+    | CLASS TYPEID INHERITS TYPEID '{' feature_list '}' ';'
+        { $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
+    | CLASS error '}'';' class 
+        { $$ = $5; }
+    ;
 
 feature
     : OBJECTID '(' formal_list ')' ':' TYPEID '{' expr '}' ';'
@@ -260,7 +260,9 @@ expr_list_semic
     | expr_list_semic  expr ';'
         { $$ = append_Expressions($1, single_Expressions($2)); }
     | expr_list_semic error ';' 
-        { $$ = $1; }   
+        { $$ = $1; }
+    | error expr_list_semic 
+        { $$ = $2; }    
     ;
 
 /* end of grammar */
