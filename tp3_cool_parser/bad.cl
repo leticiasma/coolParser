@@ -19,11 +19,34 @@ Class b inherits A {
 Class C inherits a {
 };
 
-(* error:  keyword inherits is misspelled *)
-Class D inherts A {
+(*Erro em feature mas ele se recupera e o parser não para*)
+Class V{
+    a : Int <- ;
+    b <- Int <- 9;
 };
+
+
+(*Dois erros: -> Uma declaração com erro no let que é recuperada pois existe
+                outra declaração sem erro logo em seguida
+              -> Uso de uma variável j não declarada dentro de um bloco que é recuperada
+                    pois a próxima expressão não contém erros *)
+Class Main{
+    main() : Int{
+        let 
+            a : Int <- , 
+            b : Int <- 6 
+        in 
+            {j; a;}
+    };
+}; 
 
 (* error:  closing brace is missing *)
 Class E inherits A {
 ;
 
+(*Sem erros para que recuperemos do erro da classe anterior e o parser não pare*)
+Class F {};
+
+(* error:  keyword inherits is misspelled *)
+Class D inherts A {
+};
