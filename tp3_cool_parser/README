@@ -169,6 +169,3 @@ completamos a lista de não terminais da gramática juntamente com seus tipos e 
 de tipo que especificam a sintaxe de Cool (apresentadas na seção 12 do cool-manual.pdf). Nosso Parser passou em todos 
 os casos de testes em cool/examples e também no arquivo good.cl que escrevemos (como detalhado na seção anterior).
 Além disso, tratamos e exercitamos os erros mencionados na seção 5 da especificação.
-
-
-Obs.: Mudar ordem de listas, ver se é possível modificar mais alguma coisa
