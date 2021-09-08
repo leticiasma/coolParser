@@ -134,4 +134,41 @@ Instruções
 
 ------8<------8<------8<------8<---corte arqui---8<------8<------8<------8<-----
 
-[Aqui começa sua documentação]
+Daniel Souza de Campos ; 2018054664
+Letícia da Silva Macedo Alves ; 2018054443
+
+TP3 - Compiladores
+
+Decisões:
+-Para implementar as regras dos não terminais, seguimos as regras apresentadas na seção 12 do cool-manual.pdf
+-Para implementar as declarações de precedência usamos o que foi especificado na seção 11.1 do cool-manual.pdf
+-Assumimos para o erro na definição de classe que uma classe é considerada encerrada corretamente se sua
+definição termina com "};"
+
+Casos de teste adicionados:
+-Em good.cl escrevemos um programa que exercita todas as construções (direta ou indiretamente) permitidas pela
+gramática. O código base utilizado foi a classe A2I do arquivo cool/examples/atoi.cl. Esta classe englobava a maioria 
+das regras, porém, foi necessário escrever a classe Main com o método main() que adicinou o uso das demais regras que 
+ainda não haviam sido cobertas pela classe A2I.
+-Em bad.cl os erros que focamos em tratar foram apenas aqueles especificados na documentação. Ou seja: erro na definição
+ de classe (que é encerrada corretamente e a próxima classe está sintáticamente correta), erros em features (movendo 
+ para a próxima feature), em uma declaração em uma expressão let (movendo para a próxima variável) ou em uma expressão 
+ dentro de um bloco. Todos esses 4 tipos de erro, portanto, foram exercitados no programa escrito em bad.cl.
+
+Como testamos:
+-Usamos como casos de teste os programas disponibilizados em cool/examples e também nosso good.cl. Para os testes, nós
+compilamos os programas com o comando "./mycoolc foo.cl -o foo.s" e executamos através do emulador spim utilizando o 
+comando "./spim -file foo.s". Não houveram erros de compilação e as execuções ocorreram como o esperado.
+-Além disso, a fim de verificar se o nosso Parser fornecia como saída a AST (árvore de sintaxe abstrata) correta, 
+utilizamos o comando "./myparser foo.cl" para gerar a AST usando nosso Parser e comparamos essa saída com a gerada por
+"./lexer teste.cl | caminho/para/tp4/parser" utilizando um site para comparação de textos (https://www.diffchecker.com/diff).
+
+Porque acreditamos que o programa está correto: 
+Acreditamos que nosso programa esteja correto pois, em cool.cl, implementamos todas as declarações de precedência, 
+completamos a lista de não terminais da gramática juntamente com seus tipos e implementamos também todas as regras
+de tipo que especificam a sintaxe de Cool (apresentadas na seção 12 do cool-manual.pdf). Nosso Parser passou em todos 
+os casos de testes em cool/examples e também no arquivo good.cl que escrevemos (como detalhado na seção anterior).
+Além disso, tratamos e exercitamos os erros mencionados na seção 5 da especificação.
+
+
+Obs.: Mudar ordem de listas, ver se é possível modificar mais alguma coisa
